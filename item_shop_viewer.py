@@ -27,56 +27,54 @@ async def on_ready():
 
     # await bot.change_presence(activity=discord.Game(name="Anything You Want"))
 
-# def webhook(first, valorant_points, radianite_points, item_name, item_image, price, color):
-#     global webhook_url
-#
-#
-#     webhook_url = webhook_url
-#     if first:
-#         webhook_data = {
-#             "username": "Valorant Item shop",
-#             "avatar_url": "https://wi.wallpapertip.com/wsimgs/102-1024349_valorant-logo-wallpaper-hd.png",
-#             "content": f"Valorant item shop for account = {user_id}"
-#         }
-#     else:
-#         webhook_data = {
-#             "username": "Valorant Item shop",
-#             "avatar_url": "https://wi.wallpapertip.com/wsimgs/102-1024349_valorant-logo-wallpaper-hd.png",
-#         }
-#     if first:
-#         webhook_data["embeds"] = [
-#             {
-#                 "title": f"You have {valorant_points} valorant points and {radianite_points} radianite points.",
-#                 "description": f"Your featured bundle is {item_name}",
-#                 "image": {
-#                     "url": item_image
-#                 }
-#             }
-#         ]
-#     else:
-#         webhook_data["embeds"] = [
-#             {
-#                 "color": hex_convert(color),
-#                 "title": f"{item_name} costs {price} Valorant points",
-#                 "image": {
-#                     "url": item_image
-#                 }
-#             }
-#         ]
-#
-#     result11 = requests.post(webhook_url, json=webhook_data)
-#
-#     try:
-#         result11.raise_for_status()
-#     except requests.exceptions.HTTPError as err:
-#         print(err)
-#     else:
-#         print("Payload delivered successfully, code {}.".format(result11.status_code))
+def webhook(first, valorant_points, radianite_points, item_name, item_image, price, color):
+    global webhook_url
+
+
+    # webhook_url = webhook_url
+    # if first:
+    #     webhook_data = {
+    #         "username": "Valorant Item shop",
+    #         "avatar_url": "https://wi.wallpapertip.com/wsimgs/102-1024349_valorant-logo-wallpaper-hd.png",
+    #         "content": f"Valorant item shop for account = {user_id}"
+    #     }
+    # else:
+    #     webhook_data = {
+    #         "username": "Valorant Item shop",
+    #         "avatar_url": "https://wi.wallpapertip.com/wsimgs/102-1024349_valorant-logo-wallpaper-hd.png",
+    #     }
+    # if first:
+    #     webhook_data["embeds"] = [
+    #         {
+    #             "title": f"You have {valorant_points} valorant points and {radianite_points} radianite points.",
+    #             "description": f"Your featured bundle is {item_name}",
+    #             "image": {
+    #                 "url": item_image
+    #             }
+    #         }
+    #     ]
+    # else:
+    #     webhook_data["embeds"] = [
+    #         {
+    #             "color": hex_convert(color),
+    #             "title": f"{item_name} costs {price} Valorant points",
+    #             "image": {
+    #                 "url": item_image
+    #             }
+    #         }
+    #     ]
+    #
+    # result11 = requests.post(webhook_url, json=webhook_data)
+    #
+    # try:
+    #     result11.raise_for_status()
+    # except requests.exceptions.HTTPError as err:
+    #     print(err)
+    # else:
+    #     print("Payload delivered successfully, code {}.".format(result11.status_code))
 
 
 # webhook_url = input("Enter discord webhook url: ")
-# webhook_url = "https://discord.com/api/webhooks"
-
 
 
 
@@ -106,7 +104,7 @@ def hex_convert(hex):
 def getVersion():
     versionData = requests.get("https://valorant-api.com/v1/version")
     versionDataJson = versionData.json()['data']
-    final = f"{versionDataJson['branch']}-{versionDataJson['buildVersion']}-{versionDataJson['version'][-6:]}"
+    final = f"{versionDataJson['branch']}-shipping-{versionDataJson['buildVersion']}-{versionDataJson['version'][-6:]}"
     return final
 
 def contentuuidconvert(contentuuid):
@@ -252,7 +250,10 @@ def skins(entitlements_token, access_token, user_id):
                 bundle_data = r_bundle_data.json()
                 # print(f"Your featured bundle is {row_small['Name']} - {bundle_data['data']['displayIcon']} - {skins_data['FeaturedBundle']['BundleRemainingDurationInSeconds']}.")
                 bundle_name = row_small['Name']
-                bundle_image = bundle_data['data']['displayIcon']
+                try:
+                    bundle_image = bundle_data['data']['displayIcon']
+                except KeyError:
+                    bundle_image = "https://notyetinvalorant-api.com"
 
     daily_reset = skins_data["SkinsPanelLayout"]["SingleItemOffersRemainingDurationInSeconds"]
 
@@ -324,6 +325,8 @@ async def on_message(message):
     global password
     if message.author != client.user:
         if message.content.lower().startswith('!shop'):
+            await message.channel.send("Loading shop...")
+            # try:
             user_data = username_to_data(username, password)
             access_token = user_data[0]
             entitlements_token = user_data[1]
@@ -358,6 +361,11 @@ async def on_message(message):
                 embed = discord.Embed(title=f"{skin_data['skin4_name']} costs {skin_data['skin4_price']}",)
                 embed.set_image(url=skin_data["skin4_image"])
                 await message.channel.send(embed=embed)
+            # except Exception as error_msg:
+            #     print(error_msg)
+            #     await message.channel.send("Failed to load shop.")
+
+
             # r = requests.get(f'https://pd.EU.a.pvp.net/store/v2/storefront/{user_id}', headers=headers)
             #
             # skins_data = r.json()
