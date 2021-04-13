@@ -8,7 +8,7 @@ VALORANT item shop is a discord bot to view item's in your store without opening
 
 1 - Clone the github repository
 
-`https://github.com/OwOHamper/Valorant-item-shop-discord-bot.git`
+`git clone https://github.com/OwOHamper/Valorant-item-shop-discord-bot.git`
 
 2 - Install the requeirements using using a terminal with:
 
