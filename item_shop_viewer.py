@@ -4,10 +4,11 @@ import discord
 
 client = discord.Client()
 
-
+REGION = "ENTER_USER_REGION"
 username = "ENTER_RIOT_USERNAME_HERE"
 password = "ENTER_RIOT_PASSWORD_HERE"
 bot_token = "ENTER_BOT_TOKEN_HERE"
+
 
 
 guild_count = 0
@@ -175,7 +176,7 @@ def get_currency(entitlements_token, access_token, user_id):
         'X-Riot-Entitlements-JWT': entitlements_token,
         'Authorization': f'Bearer {access_token}',
     }
-    r = requests.get(f'https://pd.EU.a.pvp.net/store/v1/wallet/{user_id}', headers=headers)
+    r = requests.get(f'https://pd.{REGION}.a.pvp.net/store/v1/wallet/{user_id}', headers=headers)
 
     data = r.json()
     # print(f"""You have {data["Balances"]["85ad13f7-3d1b-5128-9eb2-7cd8ee0b5741"]} valorant points and {data["Balances"]["e59aa87c-4cbf-517a-5983-6e81511be9b7"]} radiante points.""")
@@ -189,7 +190,7 @@ def skins(entitlements_token, access_token, user_id):
         'Authorization': f'Bearer {access_token}',
     }
 
-    r = requests.get(f'https://pd.EU.a.pvp.net/store/v2/storefront/{user_id}', headers=headers)
+    r = requests.get(f'https://pd.{REGION}.a.pvp.net/store/v2/storefront/{user_id}', headers=headers)
 
     skins_data = r.json()
     single_skins = skins_data["SkinsPanelLayout"]["SingleItemOffers"]
@@ -201,7 +202,7 @@ def skins(entitlements_token, access_token, user_id):
         "X-Riot-ClientPlatform": "ew0KCSJwbGF0Zm9ybVR5cGUiOiAiUEMiLA0KCSJwbGF0Zm9ybU9TIjogIldpbmRvd3MiLA0KCSJwbGF0Zm9ybU9TVmVyc2lvbiI6ICIxMC4wLjE5MDQyLjEuMjU2LjY0Yml0IiwNCgkicGxhdGZvcm1DaGlwc2V0IjogIlVua25vd24iDQp9"
     }
 
-    r = requests.get(f'https://shared.EU.a.pvp.net/content-service/v2/content/', headers=headers)
+    r = requests.get(f'https://shared.{REGION}.a.pvp.net/content-service/v2/content/', headers=headers)
 
     content_data = r.json()
 
@@ -239,7 +240,7 @@ def skins(entitlements_token, access_token, user_id):
         "X-Riot-ClientPlatform": "ew0KCSJwbGF0Zm9ybVR5cGUiOiAiUEMiLA0KCSJwbGF0Zm9ybU9TIjogIldpbmRvd3MiLA0KCSJwbGF0Zm9ybU9TVmVyc2lvbiI6ICIxMC4wLjE5MDQyLjEuMjU2LjY0Yml0IiwNCgkicGxhdGZvcm1DaGlwc2V0IjogIlVua25vd24iDQp9"
     }
 
-    data = requests.get("https://pd.EU.a.pvp.net/store/v1/offers/", headers=headers)
+    data = requests.get(f"https://pd.{REGION}.a.pvp.net/store/v1/offers/", headers=headers)
 
     offers_data = data.json()
 
@@ -366,7 +367,7 @@ async def on_message(message):
             #     await message.channel.send("Failed to load shop.")
 
 
-            # r = requests.get(f'https://pd.EU.a.pvp.net/store/v2/storefront/{user_id}', headers=headers)
+            # r = requests.get(f'https://pd.{REGION}.a.pvp.net/store/v2/storefront/{user_id}', headers=headers)
             #
             # skins_data = r.json()
             # single_skins = skins_data["SkinsPanelLayout"]["SingleItemOffers"]
@@ -419,7 +420,7 @@ async def on_message(message):
 #     }
 #
 #
-# data = requests.get("https://pd.EU.a.pvp.net/store/v1/offers/", headers=headers)
+# data = requests.get("https://pd.{REGION}.a.pvp.net/store/v1/offers/", headers=headers)
 #
 # offers_data = data.json()
 #
