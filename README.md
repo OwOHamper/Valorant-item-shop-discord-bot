@@ -33,6 +33,11 @@ user_to_ping = <- Username ID
 
 ![image](https://user-images.githubusercontent.com/74879467/113409254-31448280-93b1-11eb-9d7d-b7b3670d3fd4.png)
 
+7 - If you want item to favourite use `!favourite` command
+
+![image](https://user-images.githubusercontent.com/74879467/118840034-517bc280-b8c7-11eb-888f-58f1302e91b1.png)
+
+
 # Issues
 
 If you find an error or can't seem to run create an issue.
