@@ -20,6 +20,7 @@ VALORANT item shop is a discord bot to view item's in your store without opening
 
 ```
 REGION = "ENTER_USER_REGION" <- NA, EU etc..
+Prefix = "ENTER BOTS PREFIX" <- Prefix for the bot
 username = "ENTER_RIOT_USERNAME_HERE" <- Your Riot username NOT your ingame username
 password = "ENTER_RIOT_PASSWORD_HERE" <- The password for your Riot Account
 bot_token = "ENTER_BOT_TOKEN_HERE" <- Discord Bot token

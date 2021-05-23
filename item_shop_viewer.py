@@ -5,17 +5,19 @@ import asyncio
 
 client = discord.Client()
 
+
 REGION = ""
+Prefix = "" # Bot's Prefix
 username = ""
-password = "'
+password = ""
 bot_token = ""
 user_in_chat = False
 msg = 0
 author = 0
 #it must be id!
-ChannelToSentNotifications = 
+ChannelToSentNotifications = int("")
 #it must be id!
-user_to_ping = 
+user_to_ping = int("")
 
 
 
@@ -331,7 +333,7 @@ async def on_message(message):
     found = False
 
     if message.author != client.user:
-        if message.content.lower().startswith('!shop'):
+        if message.content.lower().startswith(f'{Prefix}shop'):
             await message.channel.send("Loading shop...")
             user_data = username_to_data(username, password)
             access_token = user_data[0]
@@ -367,7 +369,8 @@ async def on_message(message):
                 embed = discord.Embed(title=f"{skin_data['skin4_name']} costs {skin_data['skin4_price']}",)
                 embed.set_image(url=skin_data["skin4_image"])
                 await message.channel.send(embed=embed)
-        elif message.content.lower().startswith('!favourite'):
+
+        elif message.content.lower().startswith(f'{Prefix}favourite'):
             author = message.author.id
             #ping user await message.channel.send(f"<@!{author}>")
             all_weapons = requests.get("https://valorant-api.com/v1/weapons")
@@ -401,10 +404,10 @@ async def on_message(message):
 
 
 
-        elif message.content.lower().startswith('!help'):
-            await message.channel.send("""!help - show full list of commands
-!shop - show current shop
-!favourite - add skins to favourite so when it appears in shop you will get pinged""")
+        elif message.content.lower().startswith(f'{Prefix}help'):
+            await message.channel.send(f"""{Prefix}help - show full list of commands
+{Prefix}shop - show current shop
+{Prefix}favourite - add skins to favourite so when it appears in shop you will get pinged""")
 
 @client.event
 async def on_reaction_add(reaction, user):
