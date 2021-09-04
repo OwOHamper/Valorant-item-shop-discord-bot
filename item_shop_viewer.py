@@ -192,7 +192,10 @@ def skins(entitlements_token, access_token, user_id):
                         # print("test")
                         # for chromas in skin1["chromas"]:
                         # print(skin1["chromas"])
-                    single_skins_images.append(skin1["chromas"][0]["displayIcon"])
+                    if skin1["chromas"][0]["displayIcon"] != None:
+                        single_skins_images.append(skin1["chromas"][0]["displayIcon"])
+                    else:
+                        single_skins_images.append(skin1["chromas"][0]["fullRender"])
                     single_skins_tiers_uuids.append(skin1['contentTierUuid'])
                     # else:
                     #     single_skins_images.append(skin1['displayIcon'])
@@ -345,16 +348,20 @@ async def on_message(message):
             await message.channel.send(embed=embed)
             try:
                 embed = discord.Embed(title=f"{skin_data['skin1_name']} costs {skin_data['skin1_price']}")
-                embed.set_image(url=skin_data["skin1_image"])
+                if skin_data["skin1_image"] != None:
+                    embed.set_image(url=skin_data["skin1_image"])
                 await message.channel.send(embed=embed)
                 embed = discord.Embed(title=f"{skin_data['skin2_name']} costs {skin_data['skin2_price']}")
-                embed.set_image(url=skin_data["skin2_image"])
+                if skin_data["skin2_image"] != None:
+                    embed.set_image(url=skin_data["skin2_image"])
                 await message.channel.send(embed=embed)
                 embed = discord.Embed(title=f"{skin_data['skin3_name']} costs {skin_data['skin3_price']}")
-                embed.set_image(url=skin_data["skin3_image"])
+                if skin_data["skin3_image"] != None:
+                    embed.set_image(url=skin_data["skin3_image"])
                 await message.channel.send(embed=embed)
                 embed = discord.Embed(title=f"{skin_data['skin4_name']} costs {skin_data['skin4_price']}")
-                embed.set_image(url=skin_data["skin4_image"])
+                if skin_data["skin4_image"] != None:
+                    embed.set_image(url=skin_data["skin4_image"])
                 await message.channel.send(embed=embed)
             except TypeError:
                 embed = discord.Embed(title=f"{skin_data['skin1_name']} costs {skin_data['skin1_price']}",)
