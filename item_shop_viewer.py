@@ -7,7 +7,7 @@ client = discord.Client()
 
 
 REGION = ""
-Prefix = "!" # Bot's Prefix
+Prefix = "" # Bot's Prefix
 username = ""
 password = ""
 bot_token = ""
