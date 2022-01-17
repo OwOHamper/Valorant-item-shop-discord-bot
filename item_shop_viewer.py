@@ -7,7 +7,7 @@ client = discord.Client()
 
 
 REGION = ""
-Prefix = "" # Bot's Prefix
+Prefix = "!" # Bot's Prefix
 username = ""
 password = ""
 bot_token = ""
@@ -147,6 +147,7 @@ def get_currency(entitlements_token, access_token, user_id):
 
 def skins(entitlements_token, access_token, user_id):
 
+
     headers = {
         'X-Riot-Entitlements-JWT': entitlements_token,
         'Authorization': f'Bearer {access_token}',
@@ -157,16 +158,11 @@ def skins(entitlements_token, access_token, user_id):
     skins_data = r.json()
     single_skins = skins_data["SkinsPanelLayout"]["SingleItemOffers"]
 
-    headers = {
-        'X-Riot-Entitlements-JWT': entitlements_token,
-        'Authorization': f'Bearer {access_token}',
-        'X-Riot-ClientVersion': getVersion(),
-        "X-Riot-ClientPlatform": "ew0KCSJwbGF0Zm9ybVR5cGUiOiAiUEMiLA0KCSJwbGF0Zm9ybU9TIjogIldpbmRvd3MiLA0KCSJwbGF0Zm9ybU9TVmVyc2lvbiI6ICIxMC4wLjE5MDQyLjEuMjU2LjY0Yml0IiwNCgkicGxhdGZvcm1DaGlwc2V0IjogIlVua25vd24iDQp9"
-    }
+    bundle_fetch = requests.get(f'https://valorant-api.com/v1/bundles')
+    bundle_fetch = bundle_fetch.json()
+    weapon_fetch = requests.get(f'https://valorant-api.com/v1/weapons/skinlevels')
+    weapon_fetch = weapon_fetch.json()
 
-    r = requests.get(f'https://shared.{REGION}.a.pvp.net/content-service/v2/content/', headers=headers)
-
-    content_data = r.json()
     # with open("content.txt", "w", encoding="utf-8") as file:
     #     file.write(str(content_data))
     #     file.close()
@@ -183,6 +179,8 @@ def skins(entitlements_token, access_token, user_id):
     # ['12683d76-48d7-84a3-4e09-6985794f0445', 'e046854e-406c-37f4-6607-19a9ba8426fc', '60bca009-4182-7998-dee7-b8a2558dc369', 'e046854e-406c-37f4-6607-19a9ba8426fc']
     # print(contentuuidconvert("e046854e-406c-37f4-6607-19a9ba8426fc"))
 
+
+    # Récupération des image de skins
     for skin in single_skins:
         for weapons_list in data_weapons['data']:
             for skin1 in weapons_list['skins']:
@@ -213,50 +211,43 @@ def skins(entitlements_token, access_token, user_id):
 
     offers_data = data.json()
 
+    for row in bundle_fetch["data"]:
+        if skins_data["FeaturedBundle"]["Bundle"]["DataAssetID"] == row['uuid']:
+            r_bundle_data = requests.get(f"https://valorant-api.com/v1/bundles/{row['uuid']}")
+            bundle_data = r_bundle_data.json()
+            # print(f"Your featured bundle is {row_small['Name']} - {bundle_data['data']['displayIcon']} - {skins_data['FeaturedBundle']['BundleRemainingDurationInSeconds']}.")
+            bundle_name = row['displayName']
+            try:
+                bundle_image = bundle_data['data']['displayIcon']
+            except KeyError:
+                bundle_image = "https://notyetinvalorant-api.com"
 
-
-    for row in content_data:
-        for row_small in content_data[row]:
-            if skins_data["FeaturedBundle"]["Bundle"]["DataAssetID"].upper() in str(row_small):
-                r_bundle_data = requests.get(f"https://valorant-api.com/v1/bundles/{row_small['ID']}")
-                bundle_data = r_bundle_data.json()
-                # print(f"Your featured bundle is {row_small['Name']} - {bundle_data['data']['displayIcon']} - {skins_data['FeaturedBundle']['BundleRemainingDurationInSeconds']}.")
-                bundle_name = row_small['Name']
-                try:
-                    bundle_image = bundle_data['data']['displayIcon']
-                except KeyError:
-                    bundle_image = "https://notyetinvalorant-api.com"
 
     daily_reset = skins_data["SkinsPanelLayout"]["SingleItemOffersRemainingDurationInSeconds"]
 
     skin_counter = 0
     # print("Your daily item shop is: ")
+
     for skin in single_skins:
-        for row in content_data:
-            for row_small in content_data[row]:
-                if skin.upper() in str(row_small):
-                    # print(f"    {row_small['Name']} - {priceconvert(skin)}VP"
-                    #       f" - {single_skins_images[skin_counter]}"
-                    #       f" - {contentuuidconvert(single_skins_tiers_uuids[skin_counter])['displayIcon']}"
-                    #       f" - {contentuuidconvert(single_skins_tiers_uuids[skin_counter])['highlightColor']}"
-                    #       f" - {daily_reset}")
-                    if skin_counter == 0:
-                        skin1_name = row_small['Name']
-                        skin1_image = single_skins_images[skin_counter]
-                        skin1_price = priceconvert(skin, offers_data)
-                    elif skin_counter == 1:
-                        skin2_name = row_small['Name']
-                        skin2_image = single_skins_images[skin_counter]
-                        skin2_price = priceconvert(skin, offers_data)
-                    elif skin_counter == 2:
-                        skin3_name = row_small['Name']
-                        skin3_image = single_skins_images[skin_counter]
-                        skin3_price = priceconvert(skin, offers_data)
-                    elif skin_counter == 3:
-                        skin4_name = row_small['Name']
-                        skin4_image = single_skins_images[skin_counter]
-                        skin4_price = priceconvert(skin, offers_data)
-                    skin_counter += 1
+        for row in weapon_fetch["data"]:
+            if skin == row["uuid"]:
+                if skin_counter == 0:
+                    skin1_name = row['displayName']
+                    skin1_image = row['displayIcon']
+                    skin1_price = priceconvert(skin, offers_data)
+                elif skin_counter == 1:
+                    skin2_name = row['displayName']
+                    skin2_image = row['displayIcon']
+                    skin2_price = priceconvert(skin, offers_data)
+                elif skin_counter == 2:
+                    skin3_name = row['displayName']
+                    skin3_image = row['displayIcon']
+                    skin3_price = priceconvert(skin, offers_data)
+                elif skin_counter == 3:
+                    skin4_name = row['displayName']
+                    skin4_image = row['displayIcon']
+                    skin4_price = priceconvert(skin, offers_data)
+                skin_counter += 1
 
     if daily_reset >= 3600:
         daily_reset_in_hr = round(daily_reset / 3600, 0)
@@ -321,7 +312,6 @@ def check_favourite(skin_list):
 
 
 
-
 @client.event
 async def on_message(message):
     global username
@@ -337,7 +327,6 @@ async def on_message(message):
 
     if message.author != client.user:
         if message.content.lower().startswith(f'{Prefix}shop'):
-            await message.channel.send("Loading shop...")
             user_data = username_to_data(username, password)
             access_token = user_data[0]
             entitlements_token = user_data[1]
@@ -471,8 +460,3 @@ async def my_background_task():
 
 client.loop.create_task(my_background_task())
 client.run(bot_token)
-
-
-
-
-
